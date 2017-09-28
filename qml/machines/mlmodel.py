@@ -28,13 +28,25 @@ class MLModel(object):
         self._targes = targets
 
     def train(self, data):
-        raise NotImplementedError
+        return self._train(data)
     
     def predict(self, data):
-        raise NotImplementedError
+        return self._predict(data)
     
     def save(self, path):
-        raise NotImplementedError
+        return self._save(path)
 
     def restore(self, path):
+        return self._restore(path)
+
+    def _train(self, data):
+        raise NotImplementedError
+    
+    def _predict(self, data):
+        raise NotImplementedError
+    
+    def _save(self, path):
+        raise NotImplementedError
+
+    def _restore(self, path):
         raise NotImplementedError

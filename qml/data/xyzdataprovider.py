@@ -20,8 +20,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import data
-import machines
-import math
-import models
+from __future__ import division, absolute_import, print_function
 
+import numpy as np
+
+import ase
+from ase.io import read
+from ase.db import connect
+
+from .dataprovider import DataProvider
+
+class XYZDataProvider(DataProvider):
+
+    def add_structures(self, xyz_filenames):
+
+        self.compounds = connect(self.name+ ".db")
+
+        for i, xyz_filename in enumerate(xyz_filenames):
+            print(i, xyz_filename, self.properties[i])
+            compound = read(xyz_filename)
+            self.compounds.write(compound)
+ 

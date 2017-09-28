@@ -20,8 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import data
-import machines
-import math
-import models
+from __future__ import division, absolute_import, print_function
+
+import numpy as np
+
+import ase
+from ase.io import read
+from ase.db import connect
+
+
+class DataProvider(object):
+
+    def __init__(self, properties, name="compounds"):
+
+        self.name = name
+        self.properties = properties
+        self.compounds = None
+
+    def get_properties(self, idx=None):
+
+        return self.properties, self.compounds 
+
+    def read_database(self, db_filename):
+
+        self.compounds = connect(db_filename)
 

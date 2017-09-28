@@ -44,8 +44,8 @@ if any(["intelem" in arg for arg in sys.argv]):
 
 
 
-ext_fkernels = Extension(name = 'fkernels',
-                          sources = ['qml/fkernels.f90'],
+ext_fkernels = Extension(name = 'qml.models.kernels.fkernels',
+                          sources = ['qml/models/kernels/fkernels.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -53,8 +53,8 @@ ext_fkernels = Extension(name = 'fkernels',
                           language = FORTRAN,
                           f2py_options=['--quiet'])
 
-ext_frepresentations = Extension(name = 'frepresentations',
-                          sources = ['qml/frepresentations.f90'],
+ext_frepresentations = Extension(name = 'qml.models.representations.frepresentations',
+                          sources = ['qml/models/representations/frepresentations.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -62,8 +62,8 @@ ext_frepresentations = Extension(name = 'frepresentations',
                           language = FORTRAN,
                           f2py_options=['--quiet'])
 
-ext_fslatm = Extension(name = 'fslatm',
-                          sources = ['qml/fslatm.f90'],
+ext_fslatm = Extension(name = 'qml.models.representations.fslatm',
+                          sources = ['qml/models/representations/fslatm.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -71,8 +71,8 @@ ext_fslatm = Extension(name = 'fslatm',
                           language = FORTRAN,
                           f2py_options=['--quiet'])
 
-ext_fcho_solve = Extension(name = 'fcho_solve',
-                          sources = ['qml/fcho_solve.f90'],
+ext_fcho_solve = Extension(name = 'qml.math.fcho_solve',
+                          sources = ['qml/math/fcho_solve.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -92,7 +92,15 @@ def setup_qml():
     setup(
 
         name="qml",
-        packages=['qml'],
+        packages=[
+            'qml',
+            'qml.data',
+            'qml.models',
+            'qml.models.kernels',
+            'qml.models.representations',
+            'qml.machines',
+            'qml.math',
+            ],
 
         # metadata
         version=__version__,
@@ -105,9 +113,7 @@ def setup_qml():
         classifiers = [],
         url = __url__,
 
-        # set up package contents
-
-        ext_package = 'qml',
+        # set up compiled package contents
         ext_modules = [
               ext_fkernels,
               ext_frepresentations,

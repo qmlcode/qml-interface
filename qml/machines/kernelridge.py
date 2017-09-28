@@ -21,13 +21,16 @@
 # SOFTWARE.
 
 from __future__ import division, absolute_import, print_function
-import ase
+
+from time import time
+
 import numpy as np
 
-from .representations import generate_coulomb_matrix
-from .kernels import gaussian_kernel
-from .math import cho_solve
+import ase
 
+from qml.models.representations import generate_coulomb_matrix
+from qml.models.kernels import gaussian_kernel
+from qml.math import cho_solve
 from .mlmodel import MLModel
 
 class GenericKRR(MLModel):
@@ -42,8 +45,9 @@ class GenericKRR(MLModel):
         self.sigma = sigma
         self.llambda = llambda
 
-    def train(self, data):
- 
+    def _train(self, data):
+
+        start = time()
         X = []
 
         (properties, compounds) = data.get_properties()
@@ -59,8 +63,20 @@ class GenericKRR(MLModel):
         self.K = gaussian_kernel(self.X, self.X, self.sigma)
         self.K[np.diag_indices_from(self.K)] += self.llambda
         self.alpha = cho_solve(self.K, self.Y) 
+       
+        Yss = np.dot(self.K, self.alpha)
+        mae_training_error = np.mean(np.abs(Yss - self.Y))
+        rmse_training_error = np.sqrt(np.mean(np.square(Yss - self.Y)))
 
-    def predict(self, data):
+        result = {
+            "MAETrainingError": mae_training_error,
+            "RMSETrainingError": rmse_training_error,
+            "ElapsedTime": time() - start,
+            }
+
+        return result
+
+    def _predict(self, data):
         
         Xs = []
 
@@ -78,7 +94,7 @@ class GenericKRR(MLModel):
         return np.dot(Ks, self.alpha)
 
 
-    def restore(self, path, load_kernel=False):
+    def _restore(self, path, load_kernel=False):
         self.Y = np.load(path + "/Y.npy")
         self.X = np.load(path + "/X.npy")
         self.alpha = np.load(path + "/alpha.npy")
@@ -86,7 +102,7 @@ class GenericKRR(MLModel):
             self.K = np.load(path + "/K.npy")
 
 
-    def save(self, path, save_kernel=False):
+    def _save(self, path, save_kernel=False):
         np.save(path + "/X.npy", self.X)
         np.save(path + "/Y.npy", self.Y)
         np.save(path + "/alpha.npy", self.alpha)
