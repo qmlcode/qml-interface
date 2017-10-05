@@ -44,8 +44,8 @@ if any(["intelem" in arg for arg in sys.argv]):
 
 
 
-ext_fkernels = Extension(name = 'qml.models.kernels.fkernels',
-                          sources = ['qml/models/kernels/fkernels.f90'],
+ext_fkernels = Extension(name = 'qml.ml.kernels.fkernels',
+                          sources = ['qml/ml/kernels/fkernels.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -53,8 +53,17 @@ ext_fkernels = Extension(name = 'qml.models.kernels.fkernels',
                           language = FORTRAN,
                           f2py_options=['--quiet'])
 
-ext_frepresentations = Extension(name = 'qml.models.representations.frepresentations',
-                          sources = ['qml/models/representations/frepresentations.f90'],
+ext_farad_kernels = Extension(name = 'qml.ml.arad.farad_kernels',
+                          sources = ['qml/ml/arad/farad_kernels.f90'],
+                          extra_f90_compile_args = COMPILER_FLAGS,
+                          extra_f77_compile_args = COMPILER_FLAGS,
+                          extra_compile_args = COMPILER_FLAGS,
+                          extra_link_args = LINKER_FLAGS,
+                          language = FORTRAN,
+                          f2py_options=['--quiet'])
+
+ext_frepresentations = Extension(name = 'qml.ml.representations.frepresentations',
+                          sources = ['qml/ml/representations/frepresentations.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -62,8 +71,8 @@ ext_frepresentations = Extension(name = 'qml.models.representations.frepresentat
                           language = FORTRAN,
                           f2py_options=['--quiet'])
 
-ext_fslatm = Extension(name = 'qml.models.representations.fslatm',
-                          sources = ['qml/models/representations/fslatm.f90'],
+ext_fdistance = Extension(name = 'qml.ml.kernels.fdistance',
+                          sources = ['qml/ml/kernels/fdistance.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -71,8 +80,17 @@ ext_fslatm = Extension(name = 'qml.models.representations.fslatm',
                           language = FORTRAN,
                           f2py_options=['--quiet'])
 
-ext_fcho_solve = Extension(name = 'qml.math.fcho_solve',
-                          sources = ['qml/math/fcho_solve.f90'],
+ext_fslatm = Extension(name = 'qml.ml.representations.fslatm',
+                          sources = ['qml/ml/representations/fslatm.f90'],
+                          extra_f90_compile_args = COMPILER_FLAGS,
+                          extra_f77_compile_args = COMPILER_FLAGS,
+                          extra_compile_args = COMPILER_FLAGS,
+                          extra_link_args = LINKER_FLAGS,
+                          language = FORTRAN,
+                          f2py_options=['--quiet'])
+
+ext_fsolvers = Extension(name = 'qml.ml.math.fsolvers',
+                          sources = ['qml/ml/math/fsolvers.f90'],
                           extra_f90_compile_args = COMPILER_FLAGS,
                           extra_f77_compile_args = COMPILER_FLAGS,
                           extra_compile_args = COMPILER_FLAGS,
@@ -95,11 +113,12 @@ def setup_qml():
         packages=[
             'qml',
             'qml.data',
+            'qml.ml',
+            'qml.ml.arad',
+            'qml.ml.kernels',
+            'qml.ml.math',
+            'qml.ml.representations',
             'qml.models',
-            'qml.models.kernels',
-            'qml.models.representations',
-            'qml.machines',
-            'qml.math',
             ],
 
         # metadata
@@ -118,7 +137,9 @@ def setup_qml():
               ext_fkernels,
               ext_frepresentations,
               ext_fslatm,
-              ext_fcho_solve,
+              ext_fsolvers,
+              ext_fdistance,
+              ext_farad_kernels,
         ],
 )
 

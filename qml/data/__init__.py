@@ -21,3 +21,4 @@
 # SOFTWARE.
 
 from .xyzdataprovider import XYZDataProvider
+from .compound import Compound

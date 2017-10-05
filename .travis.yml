@@ -1,0 +1,50 @@
+language: python
+
+sudo: required
+dist: trusty
+
+group: edge
+
+python:
+  - "2.7"
+  - "3.6"
+
+before_install:
+  - sudo apt-get update -qq
+
+install:
+ - sudo apt-get install -qq gcc gfortran libblas-dev liblapack-dev
+ - sudo apt-get install -qq gcc-4.8 gfortran-4.8
+ - |
+   if [ ${TRAVIS_PYTHON_VERSION:0:1} = 3 ]; then
+       sudo apt-get install python3-numpy python3-ase
+       pip3 install scipy
+       pip3 install pytest
+       python3 setup.py build
+       python3 setup.py install
+   elif [ ${TRAVIS_PYTHON_VERSION} = "2.7" ]; then
+       sudo apt-get install python-numpy python-ase
+       pip2 install scipy
+       pip2 install pytest
+       python2 setup.py build
+       python2 setup.py install
+   else
+       echo "ERROR: Unknown Python version."
+   fi
+
+
+before_script:
+ - cd ${TRAVIS_BUILD_DIR}/tests/
+
+script:
+ - |
+   if [ ${TRAVIS_PYTHON_VERSION:0:1} = 3 ]; then
+        python3 -m pytest -v
+   elif [ ${TRAVIS_PYTHON_VERSION} = "2.7" ]; then
+        python2 -m pytest -v
+   else
+       echo "ERROR: Unknown Python version."
+   fi
+
+notifications:
+  email: false
